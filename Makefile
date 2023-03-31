@@ -34,7 +34,7 @@ precomputed_ecmult_gen.o: $(SECP256K1_SRC_PATH)/precomputed_ecmult_gen.c
 	$(CC) $(CFLAGS) $(SECP256K1_CFLAGS) -c $< -o $@
 
 command.o: command.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -DDIAGNOSE -c $< -o $@
 
 secure.o: secure.c
 	$(CC) $(CFLAGS) -I$(SECP256K1_INCLUDE_PATH) -c $< -o $@

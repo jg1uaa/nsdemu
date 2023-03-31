@@ -73,8 +73,10 @@ static void send_response(const char *cmd, const char *sep, const char *arg)
 	if (arg != NULL) serial_send_string(arg);
 	serial_send_string(CRLF);
 
+#ifdef DIAGNOSE
 	printf("/%s%s%s\n", cmd, (sep != NULL) ? sep : "(null)",
 	       (arg != NULL) ? arg : "(null)");
+#endif
 }
 
 static void command_ping(const char *cmd, const char *arg)
@@ -140,7 +142,9 @@ static void process_command(const char *cmd, const char *arg)
 {
 	int i;
 
+#ifdef DIAGNOSE
 	printf("cmd: %s arg: %s\n", cmd, (arg != NULL) ? arg : "(null)");
+#endif
 
 	for (i = 0; i < sizeof(cmds) / sizeof(struct cmdtbl); i++) {
 		if (!strcmp(cmds[i].cmd, cmd)) {
