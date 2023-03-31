@@ -6,7 +6,7 @@
 #include "secp256k1_extrakeys.h"
 #include "secp256k1_ecdh.h"
 #include "secure.h"
-#include "random.h"
+#include "platform.h"
 
 uint8_t seckey[32], pubkey[32], uid[16];
 

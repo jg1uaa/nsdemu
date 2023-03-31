@@ -1,15 +1,57 @@
 // SPDX-License-Identifier: MIT
 // SPDX-FileCopyrightText: 2023 SASANO Takayoshi <uaa@uaa.org.uk>
 
-#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include <termios.h>
-#include "serial.h"
+#include "platform.h"
+
+char *serdev = NULL;
+char *keystr = NULL;
+
+static int fd = -1;
 
 #define SIGNDEV_SERIAL_SPEED B9600
 
-static int fd = -1;
+int platform_setup(int argc, char *argv[])
+{
+	int ch;
+
+	while ((ch = getopt(argc, argv, "l:k:")) != -1) {
+		switch (ch) {
+		case 'l':
+			serdev = optarg;
+			break;
+		case 'k':
+			keystr = optarg;
+			break;
+		}
+	}
+
+	if (serdev == NULL || keystr == NULL) {
+		printf("usage: %s -l [serial device] -k [secure key]\n",
+		       argv[0]);
+		return -1;
+	}
+
+	return 0;
+}
+
+int platform_finish(void)
+{
+	return 0;
+}
+
+void random_engine_initialize(void) {
+	/* do nothing */
+}
+
+void random_fill_buf(void *buf, int len) {
+	arc4random_buf(buf, len);
+}
 
 char serial_read_char(void)
 {

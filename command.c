@@ -5,9 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "command.h"
-#include "random.h"
 #include "secure.h"
-#include "serial.h"
+#include "platform.h"
 
 #define CRLF "\x0d\x0a"
 #define hexstr_len(x) ((x) * 2 + 1)

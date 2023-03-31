@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: 2023 SASANO Takayoshi <uaa@uaa.org.uk>
 
 TARGET = nsdemu
-OBJS = command.o random.o serial.o secure.o nostr-key.o main.o
+OBJS = command.o secure.o nostr-key.o platform.o main.o
 CFLAGS = -fdata-sections -ffunction-sections -Wall -Os
 
 SECP256K1_PATH = ./secp256k1
@@ -36,16 +36,13 @@ precomputed_ecmult_gen.o: $(SECP256K1_SRC_PATH)/precomputed_ecmult_gen.c
 command.o: command.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-random.o: random.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-serial.o: serial.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
 secure.o: secure.c
 	$(CC) $(CFLAGS) -I$(SECP256K1_INCLUDE_PATH) -c $< -o $@
 
 nostr-key.o: nostr-key.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+platform.o: platform-unix.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 main.o: main.c
