@@ -128,7 +128,7 @@ static void command_shared_secret(const char *cmd, const char *arg)
 	pubkey[0] = 0x02;
 	memcpy(pubkey + 1, arg, 64);
 	pubkey[65] = 0;
-	if (decode_hex(pubkey + 1, 32, pubkey + 1) < 0)
+	if (decode_hex(pubkey + 1, 32, (char *)(pubkey + 1)) < 0)
 		return;
 
 	if (secure_make_shared_secret(secret, pubkey, pubkey_len) < 0)
