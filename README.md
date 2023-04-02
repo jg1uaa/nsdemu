@@ -3,7 +3,7 @@
 ---
 ## Description
 
-Seek possibility of porting [nostr-signing-device](https://github.com/lnbits/nostr-signing-device) (NSD) to other SoC (not ESP32), emulate NSD on OpenBSD.
+Seek possibility of porting [nostr-signing-device](https://github.com/lnbits/nostr-signing-device) (NSD) to other SoC (not ESP32), emulate NSD on OpenBSD and Linux (arc4random() supported glibc is required).
 
 ## Usage
 
