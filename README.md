@@ -5,6 +5,17 @@
 
 Seek possibility of porting [nostr-signing-device](https://github.com/lnbits/nostr-signing-device) (NSD) to other SoC (not ESP32), emulate NSD on OpenBSD and Linux (arc4random() supported glibc is required).
 
+## Build procedure for OpenBSD/Linux
+
+```
+$ git clone --recursive https://github.com/jg1uaa/nsdemu
+$ cd nsdemu
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+```
+
 ## Usage
 
 ```
