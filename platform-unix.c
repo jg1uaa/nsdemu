@@ -45,11 +45,13 @@ int platform_finish(void)
 	return 0;
 }
 
-void random_engine_initialize(void) {
+void random_engine_initialize(void)
+{
 	/* do nothing */
 }
 
-void random_fill_buf(void *buf, int len) {
+void random_fill_buf(void *buf, int len)
+{
 	arc4random_buf(buf, len);
 }
 
