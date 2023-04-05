@@ -16,13 +16,27 @@ $ cmake ..
 $ make
 ```
 
-## Usage
+## Build procedure for RP2040
 
 ```
-$ nsdemu -l [serial device] -k [secure key]
+$ git clone --recursive https://github.com/jg1uaa/nsdemu
+$ cd nsdemu
+$ git clone --recursive https://github.com/raspberrypi/pico-sdk
+$ mkdir build
+$ cd build
+$ cmake -DPLATFORM=rp2040 -DKEYSTR=nsec1-your-secret-key ..
+$ make
+$ cp nsdemu.uf2 /path/to/rp2boot-device
+$ sync
 ```
 
-Secure key accepts both bech32 format (nsec1...) and 64digit-hex format.
+## Usage for OpenBSD/Linux
+
+```
+$ nsdemu -l [serial device] -k [secret key]
+```
+
+Secret key accepts both bech32 format (nsec1...) and 64digit-hex format.
 
 ## Supported command
 
