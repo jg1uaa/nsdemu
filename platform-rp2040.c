@@ -17,6 +17,7 @@ char *keystr = KEYSTR;
 int platform_setup(int argc, char *argv[])
 {
 	stdio_usb_init();
+	stdio_set_translate_crlf(&stdio_usb, false);
 	while (!stdio_usb_connected())
 		sleep_ms(100);
 
