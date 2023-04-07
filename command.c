@@ -9,7 +9,6 @@
 #include "platform.h"
 
 #define CRLF "\x0d\x0a"
-#define hexstr_len(x) ((x) * 2 + 1)
 
 static void command_ping(const char *cmd, const char *arg);
 static void command_pubkey(const char *cmd, const char *arg);
@@ -65,7 +64,7 @@ int decode_hex(uint8_t *buf, int buflen, const char *str)
 	return 0;
 }
 
-static void send_response(const char *cmd, const char *sep, const char *arg)
+void send_response(const char *cmd, const char *sep, const char *arg)
 {
 	serial_send_string("/");
 	serial_send_string(cmd);
@@ -154,12 +153,12 @@ static void process_command(const char *cmd, const char *arg)
 	}
 }
 
-static void wait_for_character(char d)
+void wait_for_character(char d)
 {
 	while (serial_read_char() != d);
 }
 
-static int receive_token(char *buf, int len, int arg_mode)
+int receive_token(char *buf, int len, int arg_mode)
 {
 	int i, v;
 	char c;

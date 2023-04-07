@@ -44,7 +44,6 @@ int secure_engine_initialize(void)
 	uint8_t random_seed[32];
 	int i, v = -1;
 
-	random_engine_initialize();
 	random_fill_buf(random_seed, sizeof(random_seed));
 
 	/* initialize secp256k1 engine and create pubkey from seckey */

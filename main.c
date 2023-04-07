@@ -9,6 +9,8 @@
 
 int main(int argc, char *argv[])
 {
+	random_engine_initialize();
+
 	if (platform_setup(argc, argv) < 0)
 		goto fin0;
 
