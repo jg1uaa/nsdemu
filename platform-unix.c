@@ -31,11 +31,18 @@ int platform_setup(int argc, char *argv[])
 		}
 	}
 
+#ifdef NSDEMU_TEST
+	if (serdev == NULL) {
+		printf("usage: %s -l [serial device]\n", argv[0]);
+		return -1;
+	}
+#else
 	if (serdev == NULL || keystr == NULL) {
 		printf("usage: %s -l [serial device] -k [secure key]\n",
 		       argv[0]);
 		return -1;
 	}
+#endif
 
 	return 0;
 }
