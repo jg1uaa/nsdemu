@@ -102,6 +102,9 @@ static void command_sign(const char *cmd, const char *arg)
 	uint8_t id[32], sig[64];
 	char buf[hexstr_len(sizeof(sig))];
 
+	if (arg == NULL)
+		return;
+
 	if (decode_hex(id, sizeof(id), arg) < 0)
 		return;
 
@@ -119,6 +122,9 @@ static void command_shared_secret(const char *cmd, const char *arg)
 	uint8_t secret[32];
 	uint8_t pubkey[hexstr_len(pubkey_len)];
 	char buf[hexstr_len(sizeof(secret))];
+
+	if (arg == NULL)
+		return;
 
 	/* due to defect of decode_hex(), modified arg needed */
 	if (strlen(arg) != 128)
