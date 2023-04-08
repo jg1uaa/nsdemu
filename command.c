@@ -117,23 +117,17 @@ static void command_sign(const char *cmd, const char *arg)
 
 static void command_shared_secret(const char *cmd, const char *arg)
 {
-#define pubkey_len 33
+#define pubkey_len 65
 
 	uint8_t secret[32];
-	uint8_t pubkey[hexstr_len(pubkey_len)];
+	uint8_t pubkey[pubkey_len];
 	char buf[hexstr_len(sizeof(secret))];
 
 	if (arg == NULL)
 		return;
 
-	/* due to defect of decode_hex(), modified arg needed */
-	if (strlen(arg) != 128)
-		return;
-
-	pubkey[0] = 0x02;
-	memcpy(pubkey + 1, arg, 64);
-	pubkey[65] = 0;
-	if (decode_hex(pubkey + 1, 32, (char *)(pubkey + 1)) < 0)
+	pubkey[0] = 0x04; // uncompressed form
+	if (decode_hex(pubkey + 1, pubkey_len - 1, arg) < 0)
 		return;
 
 	if (secure_make_shared_secret(secret, pubkey, pubkey_len) < 0)
