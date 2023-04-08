@@ -10,15 +10,9 @@
 
 uint8_t seckey[32], pubkey[32], uid[16];
 
-#ifndef NSDEMU_TEST
-#define static_local static
-#else
-#define static_local /* */
-#endif
-
 static secp256k1_context *ctx;
 static secp256k1_keypair keypair;
-static_local secp256k1_xonly_pubkey xpubkey;
+static secp256k1_xonly_pubkey xpubkey;
 
 int secure_make_signature(uint8_t *sig, uint8_t *msg)
 {

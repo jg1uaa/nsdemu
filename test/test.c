@@ -8,10 +8,15 @@
 #include "command.h"
 #include "secure.h"
 #include "platform.h"
+#include "secp256k1_schnorrsig.h"
 #include "secp256k1_extrakeys.h"
 
 static char cmd[32], arg[160];
-extern secp256k1_xonly_pubkey xpubkey; // from secure.c
+static uint8_t nsd_pubkey[sizeof(pubkey) + 1];
+static uint8_t nsd_pubkey_xy[65];
+
+static secp256k1_context *ctx_test;
+static secp256k1_xonly_pubkey xpubkey;
 
 static int wait_for_device(void)
 {
@@ -85,13 +90,26 @@ error:
 static int test_pubkey(void)
 {
 	const static char cmdstr[] = "public-key";
-	uint8_t tmp[sizeof(pubkey)];
+	size_t outputlen;
+	secp256k1_pubkey ec_pubkey;
 
 	/* simply send public-key */
-	if (send_and_receive(cmdstr, NULL, tmp, sizeof(tmp)) < 0)
+	if (send_and_receive(cmdstr, NULL,
+			     nsd_pubkey + 1, sizeof(nsd_pubkey) - 1) < 0)
 		goto error;
 
-	// XXX no content check
+	/* create pubkey(xy) from obtained public-key */
+	nsd_pubkey[0] = 0x02; // compressed form
+	outputlen = sizeof(nsd_pubkey_xy);
+	if (!secp256k1_xonly_pubkey_parse(ctx_test, &xpubkey, nsd_pubkey + 1) ||
+	    !secp256k1_ec_pubkey_parse(ctx_test, &ec_pubkey,
+				       nsd_pubkey, sizeof(nsd_pubkey)) ||
+	    !secp256k1_ec_pubkey_serialize(ctx_test, nsd_pubkey_xy,
+					   &outputlen, &ec_pubkey,
+					   SECP256K1_EC_UNCOMPRESSED)) {
+		printf("%s: internal error\n", cmdstr);
+		goto error;
+	}
 
 	return 0;
 error:
@@ -110,7 +128,10 @@ static int test_sign(void)
 	if (send_and_receive(cmdstr, buf, sig, sizeof(sig)) < 0)
 		goto error;
 
-	// XXX no content check
+	/* verify signature */
+	if (!secp256k1_schnorrsig_verify(ctx_test, sig, id,
+					 sizeof(id), &xpubkey))
+		goto error;
 
 	return 0;
 error:
@@ -120,11 +141,12 @@ error:
 static int test_shared_secret(void)
 {
 	const static char cmdstr[] = "shared-secret";
-	uint8_t key[64], sec[32];
-	char buf[hexstr_len(sizeof(key))];
+	uint8_t sec[32];
+	char buf[hexstr_len(sizeof(nsd_pubkey_xy))];
 
-	/* send shared-secret with 512bit data */
-	encode_hex(buf, sizeof(buf), (uint8_t *)&xpubkey, sizeof(xpubkey));
+	/* send shared-secret with pubkey(xy) */
+	encode_hex(buf, sizeof(buf),
+		   nsd_pubkey_xy + 1, sizeof(nsd_pubkey_xy) - 1);
 	if (send_and_receive(cmdstr, buf, sec, sizeof(sec)) < 0)
 		goto error;
 
@@ -137,12 +159,25 @@ error:
 
 void test_loop(void)
 {
+	if ((ctx_test =
+	     secp256k1_context_create(SECP256K1_CONTEXT_NONE)) == NULL) {
+		printf("cannot create secp256k1 context\n");
+		return;
+	}
+
+	if (test_ping1())
+		printf("ping1: error\n");
+	if (test_ping2())
+		printf("ping2: error\n");
+	if (test_pubkey())
+		printf("pubkey: error\n");
+
 	while(1) {
-		test_ping1();
-		test_ping2();
-		test_pubkey();
-		test_sign();
-		test_shared_secret();
+		if (test_sign())
+			printf("sign: error\n");
+		if (test_shared_secret())
+			printf("shared secret: error\n");
+		
 		putchar('.'); fflush(stdout);
 	}
 }
