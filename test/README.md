@@ -2,7 +2,7 @@
 
 ## Description
 
-Endlessly send `/ping`, `/public-key`, `/sign-message` and `/shared-secret` command to check nostr-signing-device stability.
+Endlessly send `/sign-message` and `/shared-secret` command to check nostr-signing-device stability.
 
 Response from nostr-signing-device is not checked.
 
