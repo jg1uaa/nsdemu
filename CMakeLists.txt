@@ -44,7 +44,7 @@ add_library(secp256k1 STATIC
 		      ${SECP256K1_SRC}/precomputed_ecmult.c
 		      ${SECP256K1_SRC}/precomputed_ecmult_gen.c)
 set(SECP256K1_CFLAGS
-	-DECMULT_GEN_PREC_BITS=2 -DECMULT_WINDOW_SIZE=2 -DENABLE_MODULE_ECDH=1
+	-DECMULT_GEN_PREC_BITS=4 -DECMULT_WINDOW_SIZE=2 -DENABLE_MODULE_ECDH=1
 	-DENABLE_MODULE_EXTRAKEYS=1 -DENABLE_MODULE_SCHNORRSIG=1
 	-Wno-unused-function)
 target_compile_options(secp256k1 PRIVATE ${SECP256K1_CFLAGS})
@@ -55,5 +55,6 @@ if(USE_PICO_SDK)
   pico_enable_stdio_usb(nsdemu 1)
   pico_enable_stdio_uart(nsdemu 0)
   pico_add_extra_outputs(nsdemu)
+# pico_set_binary_type(nsdemu copy_to_ram)
 endif()
 target_link_libraries(nsdemu common secp256k1 ${EXTRA_LIBRARY})
