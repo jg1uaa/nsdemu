@@ -2,3 +2,6 @@
 	path = secp256k1
 	url = https://github.com/bitcoin-core/secp256k1
 	branch = master
+[submodule "uBitcoin"]
+	path = uBitcoin
+	url = https://github.com/micro-bitcoin/uBitcoin

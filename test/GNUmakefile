@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: 2023 SASANO Takayoshi <uaa@uaa.org.uk>
 
 TARGET = nsdemu-test
-OBJS = test.o command.o secure.o platform.o main.o
+OBJS = test.o command.o secure-secp256k1.o platform.o main.o
 CFLAGS = -fdata-sections -ffunction-sections -Wall -Os \
 	-DNSDEMU_TEST #-DDIAGNOSE
 
@@ -42,7 +42,7 @@ test.o: test.c
 command.o: $(COMMON_PATH)/command.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-secure.o: $(COMMON_PATH)/secure.c
+secure-secp256k1.o: $(COMMON_PATH)/secure-secp256k1.c
 	$(CC) $(CFLAGS) -I$(SECP256K1_INCLUDE_PATH) -c $< -o $@
 
 platform.o: $(COMMON_PATH)/platform-unix.c

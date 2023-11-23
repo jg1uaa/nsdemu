@@ -52,3 +52,5 @@ MIT License
 ## Issue
 
 Currently nsdemu uses [secp256k1](https://github.com/bitcoin-core/secp256k1) library, it contains precomputed table. The smallest size of the table is 32k bytes, replacing more small library is required to fit in small-storage MCU.
+
+`cmake -DSECURE_LIBRARY=ubitcoin` uses [uBitcoin](https://github.com/micro-bitcoin/uBitcoin) library instead of secp256k1 and it makes smaller object. But performance is poor, 5x slower than secp256k1 on RP2040.
